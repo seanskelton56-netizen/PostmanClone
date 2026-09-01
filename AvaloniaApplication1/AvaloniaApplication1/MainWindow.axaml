@@ -6,6 +6,10 @@
     <DockPanel Margin="10">
         
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,10">
+            <ComboBox Name="MethodBox" SelectedIndex="0" Width="100">
+                <ComboBoxItem Content="GET" />
+                <ComboBoxItem Content="HEAD" />
+            </ComboBox>
             <TextBox Name="UrlBox"
                      Watermark="https://api.example.com/endpoint"
                      Width="600" />
