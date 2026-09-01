@@ -1,0 +1,10 @@
+## .NET build output
+bin/
+obj/
+
+## Rider / JetBrains
+.idea/
+*.sln.iml
+
+## OS junk
+.DS_Store
