@@ -19,6 +19,7 @@ public partial class MainWindow : Window
     private async void OnSendClick(object? sender, RoutedEventArgs e){
         var url = UrlBox.Text?.Trim();
         var method = (MethodBox.SelectedItem as ComboBoxItem)?.Content as string ?? "GET";
+        var body = BodyBox.Text;
         
         if (string.IsNullOrWhiteSpace(url))
         {
@@ -31,9 +32,23 @@ public partial class MainWindow : Window
         ResponseBox.Text = "";
         
         try{
-            var httpMethod = method == "HEAD" ? HttpMethod.Head : HttpMethod.Get;
+            var httpMethod = method switch{
+                "GET" => HttpMethod.Get,
+                "HEAD" => HttpMethod.Head,
+                "DELETE" => HttpMethod.Delete,
+                "POST" => HttpMethod.Post,
+                "PUT" => HttpMethod.Put,
+                _ => HttpMethod.Get
+                
+            };
             
-            using var request = new HttpRequestMessage(httpMethod, url);            
+            using var request = new HttpRequestMessage(httpMethod, url);
+            
+            if (httpMethod == HttpMethod.Post  || httpMethod == HttpMethod.Put && !string.IsNullOrWhiteSpace(body))
+            {
+                request.Content = new StringContent(body, Encoding.UTF8, "application/json");
+            }
+            
             using var response = await _http.SendAsync(request);
             
             ResponseBox.Text = await FormatResponse(response);

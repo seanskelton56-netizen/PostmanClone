@@ -9,6 +9,9 @@
             <ComboBox Name="MethodBox" SelectedIndex="0" Width="100">
                 <ComboBoxItem Content="GET" />
                 <ComboBoxItem Content="HEAD" />
+                <ComboBoxItem Content="DELETE" />
+                <ComboBoxItem Content="POST" />
+                <ComboBoxItem Content="PUT"/>
             </ComboBox>
             <TextBox Name="UrlBox"
                      Watermark="https://api.example.com/endpoint"
@@ -20,6 +23,15 @@
                    DockPanel.Dock="Top"
                    Margin="0,0,0,10"
                    FontWeight="Bold" />
+        
+        <TextBox Name="BodyBox"
+                 DockPanel.Dock="Top"
+                 Watermark="Request body (JSON) - used"
+                 AcceptsReturn="True"
+                 Height="100"
+                 Margin="0,0,0,10"
+                 FontFamily="monospace"
+                 />
         
         <TextBox Name="ResponseBox"
                  IsReadOnly="True"
