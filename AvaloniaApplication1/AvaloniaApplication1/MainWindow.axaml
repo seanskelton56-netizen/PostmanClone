@@ -12,6 +12,11 @@
                 <ComboBoxItem Content="DELETE" />
                 <ComboBoxItem Content="POST" />
                 <ComboBoxItem Content="PUT"/>
+                <ComboBoxItem Content="PATCH"/>
+                <ComboBoxItem Content="OPTIONS"/>
+                <!--    <ComboBoxItem Content="TRACE"/>
+                <ComboBoxItem Content="CONNECT"/> !-->
+
             </ComboBox>
             <TextBox Name="UrlBox"
                      Watermark="https://api.example.com/endpoint"
