@@ -50,6 +50,8 @@ public partial class MainWindow : Window
             // Builds HTTP request from user input.
             using var request = new HttpRequestMessage(httpMethod, paramsUrl);
             
+            AddCustomHeaders(request, HeadersBox.Text);
+            
             // Attach body to relevant HTTP requests.
             if (ReqWithBody.Contains(httpMethod) && !string.IsNullOrWhiteSpace(body)){
                 request.Content = new StringContent(body, Encoding.UTF8, "application/json");
@@ -94,6 +96,25 @@ public partial class MainWindow : Window
         
         var separator = baseUrl.Contains("?") ? "&" : "?";
         return $"{baseUrl}{separator}{string.Join("&", pairs)}";
+    }
+    
+    private static void AddCustomHeaders(HttpRequestMessage request, string? headersText){
+        if (string.IsNullOrWhiteSpace(headersText)) return;
+
+        foreach (var line in headersText.Split('\n')){
+            var trimmed = line.Trim();
+            
+            if (string.IsNullOrEmpty(trimmed)) continue;
+            
+            var parts = trimmed.Split(':', 2);
+            if (parts.Length != 2) continue;
+            
+            var key = parts[0].Trim();
+            var value = parts[0].Trim();
+            
+            request.Headers.TryAddWithoutValidation(key, value);
+            
+        }
     }
     
     // Converts full HTTP response into human-readable format.
