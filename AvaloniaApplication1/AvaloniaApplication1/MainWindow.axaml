@@ -29,6 +29,15 @@
                    Margin="0,0,0,10"
                    FontWeight="Bold" />
         
+        <TextBox Name="ParamsBox"
+                 DockPanel.Dock="Top"
+                 Watermark="Query, params, one per line: key=value"
+                 AcceptsReturn="True"
+                 Height="100"
+                 Margin="0,0,0,10"
+                 FontFamily="monospace"
+        />
+        
         <TextBox Name="BodyBox"
                  DockPanel.Dock="Top"
                  Watermark="Request body (JSON) - used"

@@ -36,6 +36,8 @@ public partial class MainWindow : Window
             return;
         }
         
+        var paramsUrl = BuildUrlWithParams(url, ParamsBox.Text);
+        
         // Once user has clicked send, disable send button and update UI.
         SendButton.IsEnabled = false;
         StatusText.Text = "Sending...";
@@ -46,7 +48,7 @@ public partial class MainWindow : Window
             var httpMethod = new HttpMethod(method);
             
             // Builds HTTP request from user input.
-            using var request = new HttpRequestMessage(httpMethod, url);
+            using var request = new HttpRequestMessage(httpMethod, paramsUrl);
             
             // Attach body to relevant HTTP requests.
             if (ReqWithBody.Contains(httpMethod) && !string.IsNullOrWhiteSpace(body)){
@@ -66,7 +68,35 @@ public partial class MainWindow : Window
         } /* end of finally */
     }
     
-    // Converts full HTTP response into human readable format.
+    private static string BuildUrlWithParams(string baseUrl, string? paramsText){
+        if (string.IsNullOrWhiteSpace(paramsText))
+            return baseUrl;
+        
+        
+        
+        var pairs = new List<String>();
+
+        foreach (var line in paramsText.Split('\n')){
+            var trimmed = line.Trim();
+            
+            if (string.IsNullOrEmpty(trimmed)) continue;
+            
+            var parts = trimmed.Split('=', 2);
+            if (parts.Length != 2) continue;
+            
+            var key = Uri.UnescapeDataString(parts[0].Trim());
+            var value = Uri.UnescapeDataString(parts[0].Trim());
+            
+            pairs.Add($"{key}={value}");
+            
+        }
+        if (pairs.Count == 0) return baseUrl;
+        
+        var separator = baseUrl.Contains("?") ? "&" : "?";
+        return $"{baseUrl}{separator}{string.Join("&", pairs)}";
+    }
+    
+    // Converts full HTTP response into human-readable format.
     private static async Task<string> FormatResponse(HttpResponseMessage response)    {        
         var sb = new StringBuilder();
         
