@@ -5,12 +5,24 @@ using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using System.Collections.ObjectModel;
 
 namespace AvaloniaApplication1;
 
 public partial class MainWindow : Window
 {
+    public class RequestHistoryEntry
+    {
+        public required string Method { get; init;}
+        public required string Url { get; init;}
+        public string? Params { get; init;}
+        public string? Headers { get; init;}
+        public string? Body { get; init;}
+        
+        public override string ToString() => $"{Method} {Url}";
+    }
     private static readonly HttpClient _http = new();
+    private readonly ObservableCollection<RequestHistoryEntry> _history = new();
     
     // Collection for HTTP methods/requests with body.
     private static readonly HashSet<HttpMethod> ReqWithBody = new(){
@@ -20,6 +32,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        HistoryList.ItemsSource = _history;
     }
     
     private async void OnSendClick(object? sender, RoutedEventArgs e){
@@ -62,12 +75,37 @@ public partial class MainWindow : Window
             ResponseBox.Text = await FormatResponse(response);
             StatusText.Text = "Done";
             
+            _history.Insert(0, new RequestHistoryEntry
+            {
+                Method = method,
+                Url = url,
+                Params = ParamsBox.Text,
+                Headers = HeadersBox.Text,
+                Body = body
+            });
         } /* end of try */ catch (Exception ex){
             StatusText.Text = "Error";
             ResponseBox.Text = ex.Message;
         } /* end of catch */ finally{
             SendButton.IsEnabled = true;  
         } /* end of finally */
+    }
+    
+    private void OnHistorySelected(object? sender, SelectionChangedEventArgs e)
+    {
+        if (HistoryList.SelectedItem is not RequestHistoryEntry entry) return;
+        UrlBox.Text = entry.Url;
+        ParamsBox.Text = entry.Params;
+        HeadersBox.Text = entry.Headers;
+        BodyBox.Text = entry.Body;
+        
+        foreach (var item in MethodBox.Items)
+        {
+            if (item is ComboBoxItem cbi && cbi.Content?.ToString() == entry.Method){
+                MethodBox.SelectedItem = cbi;
+                break;
+            }
+        }
     }
     
     private static string BuildUrlWithParams(string baseUrl, string? paramsText){
@@ -87,7 +125,7 @@ public partial class MainWindow : Window
             if (parts.Length != 2) continue;
             
             var key = Uri.UnescapeDataString(parts[0].Trim());
-            var value = Uri.UnescapeDataString(parts[0].Trim());
+            var value = Uri.UnescapeDataString(parts[1].Trim());
             
             pairs.Add($"{key}={value}");
             
@@ -110,7 +148,7 @@ public partial class MainWindow : Window
             if (parts.Length != 2) continue;
             
             var key = parts[0].Trim();
-            var value = parts[0].Trim();
+            var value = parts[1].Trim();
             
             request.Headers.TryAddWithoutValidation(key, value);
             

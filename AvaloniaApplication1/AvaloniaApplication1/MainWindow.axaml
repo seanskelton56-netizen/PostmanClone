@@ -3,64 +3,75 @@
         x:Class="AvaloniaApplication1.MainWindow"
         Title="Postman clone"
         Width="800" Height="600">
-    <DockPanel Margin="10">
+    <Grid ColumnDefinitions="220,*" Margin="10">
         
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,10">
-            <ComboBox Name="MethodBox" SelectedIndex="0" Width="100">
-                <ComboBoxItem Content="GET" />
-                <ComboBoxItem Content="HEAD" />
-                <ComboBoxItem Content="DELETE" />
-                <ComboBoxItem Content="POST" />
-                <ComboBoxItem Content="PUT"/>
-                <ComboBoxItem Content="PATCH"/>
-                <ComboBoxItem Content="OPTIONS"/>
-                <!--    <ComboBoxItem Content="TRACE"/>
-                <ComboBoxItem Content="CONNECT"/> !-->
+        <Border Grid.Column="0" Margin="0,0,10,0" BorderBrush="Gray" BorderThickness="1" Padding="5">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="History" FontWeight="Bold" Margin="0,0,0,5" />
+                <ListBox Name="HistoryList" 
+                         SelectionChanged="OnHistorySelected" />
+            </DockPanel>
+        </Border>
+        
+        <DockPanel Grid.Column="1">
+            
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,10">
+                <ComboBox Name="MethodBox" SelectedIndex="0" Width="100">
+                    <ComboBoxItem Content="GET" />
+                    <ComboBoxItem Content="HEAD" />
+                    <ComboBoxItem Content="DELETE" />
+                    <ComboBoxItem Content="POST" />
+                    <ComboBoxItem Content="PUT"/>
+                    <ComboBoxItem Content="PATCH"/>
+                    <ComboBoxItem Content="OPTIONS"/>
+                    <!--    <ComboBoxItem Content="TRACE"/>
+                    <ComboBoxItem Content="CONNECT"/> !-->
 
-            </ComboBox>
-            <TextBox Name="UrlBox"
-                     Watermark="https://api.example.com/endpoint"
-                     Width="600" />
-            <Button Name="SendButton" Content="Send" Click="OnSendClick" />
-        </StackPanel>
-        
-        <TextBlock Name="StatusText"
-                   DockPanel.Dock="Top"
-                   Margin="0,0,0,10"
-                   FontWeight="Bold" />
-        
-        
-        <TextBox Name="ParamsBox"
-                 DockPanel.Dock="Top"
-                 Watermark="Query, params, one per line: key=value"
-                 AcceptsReturn="True"
-                 Height="100"
-                 Margin="0,0,0,10"
-                 FontFamily="monospace"
-        />
-        
-        <TextBox Name="HeadersBox"
-                 DockPanel.Dock="Top"
-                 Watermark="headers one per line: key=value"
-                 AcceptsReturn="True"
-                 Height="100"
-                 Margin="0,0,0,10"
-                 FontFamily="monospace"
-        />
-        
-        <TextBox Name="BodyBox"
-                 DockPanel.Dock="Top"
-                 Watermark="Request body (JSON) - used"
-                 AcceptsReturn="True"
-                 Height="100"
-                 Margin="0,0,0,10"
-                 FontFamily="monospace"
-                 />
-        
-        <TextBox Name="ResponseBox"
-                 IsReadOnly="True"
-                 AcceptsReturn="True"
-                 TextWrapping="Wrap"
-                 FontFamily="monospace" />
-    </DockPanel>
+                </ComboBox>
+                <TextBox Name="UrlBox"
+                         Watermark="https://api.example.com/endpoint"
+                         Width="600" />
+                <Button Name="SendButton" Content="Send" Click="OnSendClick" />
+            </StackPanel>
+            
+            <TextBlock Name="StatusText"
+                       DockPanel.Dock="Top"
+                       Margin="0,0,0,10"
+                       FontWeight="Bold" />
+            
+            
+            <TextBox Name="ParamsBox"
+                     DockPanel.Dock="Top"
+                     Watermark="Query, params, one per line: key=value"
+                     AcceptsReturn="True"
+                     Height="100"
+                     Margin="0,0,0,10"
+                     FontFamily="monospace"
+            />
+            
+            <TextBox Name="HeadersBox"
+                     DockPanel.Dock="Top"
+                     Watermark="headers one per line: key=value"
+                     AcceptsReturn="True"
+                     Height="100"
+                     Margin="0,0,0,10"
+                     FontFamily="monospace"
+            />
+            
+            <TextBox Name="BodyBox"
+                     DockPanel.Dock="Top"
+                     Watermark="Request body (JSON) - used"
+                     AcceptsReturn="True"
+                     Height="100"
+                     Margin="0,0,0,10"
+                     FontFamily="monospace"
+                     />
+            
+            <TextBox Name="ResponseBox"
+                     IsReadOnly="True"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     FontFamily="monospace" />
+        </DockPanel>
+    </Grid>
 </Window>
