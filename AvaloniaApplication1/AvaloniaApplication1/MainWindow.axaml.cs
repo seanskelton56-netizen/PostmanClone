@@ -12,6 +12,7 @@ public partial class MainWindow : Window
 {
     private static readonly HttpClient _http = new();
     
+    // Collection for HTTP methods/requests with body.
     private static readonly HashSet<HttpMethod> ReqWithBody = new(){
         HttpMethod.Post, HttpMethod.Put, HttpMethod.Patch
     };
@@ -23,9 +24,11 @@ public partial class MainWindow : Window
     
     private async void OnSendClick(object? sender, RoutedEventArgs e){
         
+        // Stores the URL, selected HTTP method and body of http request to local variables.
         var url = UrlBox.Text?.Trim();
         var method = (MethodBox.SelectedItem as ComboBoxItem)?.Content as string ?? "GET";
         var body = BodyBox.Text;
+        
         
         if (string.IsNullOrWhiteSpace(url)){
             
@@ -33,27 +36,19 @@ public partial class MainWindow : Window
             return;
         }
         
+        // Once user has clicked send, disable send button and update UI.
         SendButton.IsEnabled = false;
         StatusText.Text = "Sending...";
         ResponseBox.Text = "";
         
         try{
-            var httpMethod = method switch{
-                "GET" => HttpMethod.Get,
-                "HEAD" => HttpMethod.Head,
-                "DELETE" => HttpMethod.Delete,
-                "POST" => HttpMethod.Post,
-                "PUT" => HttpMethod.Put,
-                "PATCH" => HttpMethod.Patch,
-                "OPTIONS" => HttpMethod.Options,
-                // "TRACE" => HttpMethod.Trace,
-               // "CONNECT" => HttpMethod.Connect,
-                _ => HttpMethod.Get
-                
-            };
+            // Map http method user selected to relevant HttpMethod object.
+            var httpMethod = new HttpMethod(method);
             
+            // Builds HTTP request from user input.
             using var request = new HttpRequestMessage(httpMethod, url);
             
+            // Attach body to relevant HTTP requests.
             if (ReqWithBody.Contains(httpMethod) && !string.IsNullOrWhiteSpace(body)){
                 request.Content = new StringContent(body, Encoding.UTF8, "application/json");
             }
@@ -62,14 +57,16 @@ public partial class MainWindow : Window
             
             ResponseBox.Text = await FormatResponse(response);
             StatusText.Text = "Done";
-        } catch (Exception ex){
+            
+        } /* end of try */ catch (Exception ex){
             StatusText.Text = "Error";
             ResponseBox.Text = ex.Message;
-        }finally{
+        } /* end of catch */ finally{
             SendButton.IsEnabled = true;  
-        }
+        } /* end of finally */
     }
     
+    // Converts full HTTP response into human readable format.
     private static async Task<string> FormatResponse(HttpResponseMessage response)    {        
         var sb = new StringBuilder();
         
